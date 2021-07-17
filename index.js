@@ -23,24 +23,25 @@ app.get('/api/tasks', (req, res) => {
 // DATABASE
 const { Pool } = require('pg');
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
 app.get('/db', async (req, res) => {
     try {
-      const client = await pool.connect();
-      const result = await client.query('SELECT * FROM test_table');
-      const results = { 'results': (result) ? result.rows : null};
-      res.render('pages/db', results );
-      client.release();
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM test_table');
+        const results = { 'results': (result) ? result.rows : null };
+        //   res.render('pages/db', results );
+        res.json(results);
+        client.release();
     } catch (err) {
-      console.error(err);
-      res.send("Error " + err);
+        console.error(err);
+        res.send("Error " + err);
     }
-  })
+})
 // DATABASE END
 
 // The "catchall" handler: for any request that doesn't
