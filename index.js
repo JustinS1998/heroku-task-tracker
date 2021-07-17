@@ -3,15 +3,18 @@ const path = require('path');
 
 const app = express();
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 // Put all API endpoints under '/api'
-app.get('/api/tasks', (req, res) => {
+app.get('/api/tasks_table', (req, res) => {
     // Return them as json
     res.json(
         {
-            tasks: [
+            results: [
                 { 'id': '1', 'title': 'task1', 'details': 'task1 details' },
                 { 'id': '2', 'title': 'task2', 'details': 'task2 details' }
             ]
@@ -53,3 +56,26 @@ const port = process.env.PORT || 5000;
 app.listen(port);
 
 console.log(`Listening on ${port}`);
+
+app.delete("/db/tasks_table", (req, res) => {
+    console.log(req.body);
+    res.send("aaa");
+});
+
+// app.delete("/message", (req, res) => {
+//     console.log("Got a DELETE request");
+//     MongoClient.connect(connectionString, { useUnifiedTopology: true })
+//         .then((client) => {
+//             const db = client.db('test');
+//             const testCollection = db.collection('testCollection');
+//             testCollection.deleteOne(req.body, (err, obj) => {
+//                 if (err) throw err;
+//                 res.send("1 item deleted");
+//             })
+//         })
+//         .catch((error) => console.error(error));
+// });
+
+app.post('/db/tasks_table', (req, res) => {
+    console.log("got a post request");
+})
