@@ -10,10 +10,10 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 app.get('/api/tasks', (req, res) => {
   // Return them as json
   res.json(
-    {
-      task1: {'title': 'task1', 'details': 'task1 details'},
-      task2: {'title': 'task2', 'details': 'task2 details'}
-    });
+    {tasks: [
+        {'id': '1', 'title': 'task1', 'details': 'task1 details'},
+        {'id': '2', 'title': 'task2', 'details': 'task2 details'}
+    ]});
 
   console.log(`Sent tasks`);
 });
