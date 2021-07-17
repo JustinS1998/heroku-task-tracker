@@ -20,7 +20,10 @@ function App (props) {
 
     const axios = require('axios').default;
     const insertNewTask = (task) => {
-        console.log(`Title: ${task.title} Details: ${task.details}`);
+        // console.log(`Title: ${task.title} Details: ${task.details}`);
+        axios.post("db/tasks_table", {title:task.title, details:task.details})
+            .then(res => console.log(res))
+            .catch(error => console.error(error));
     };
 
     const deleteTask = (id) => {

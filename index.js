@@ -59,23 +59,8 @@ console.log(`Listening on ${port}`);
 
 app.delete("/db/tasks_table", (req, res) => {
     console.log(req.body);
-    res.send("aaa");
 });
 
-// app.delete("/message", (req, res) => {
-//     console.log("Got a DELETE request");
-//     MongoClient.connect(connectionString, { useUnifiedTopology: true })
-//         .then((client) => {
-//             const db = client.db('test');
-//             const testCollection = db.collection('testCollection');
-//             testCollection.deleteOne(req.body, (err, obj) => {
-//                 if (err) throw err;
-//                 res.send("1 item deleted");
-//             })
-//         })
-//         .catch((error) => console.error(error));
-// });
-
 app.post('/db/tasks_table', (req, res) => {
-    console.log("got a post request");
+    console.log(req.body);
 })
