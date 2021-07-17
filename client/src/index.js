@@ -6,13 +6,13 @@ function App (props) {
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        fetch('/api/tasks')
-            .then(res => res.json())
-            .then(tasksObj => setTasks([...tasksObj.tasks]))
-            .catch(error => console.error(error));
+        // fetch('/api/tasks')
+        //     .then(res => res.json())
+        //     .then(tasksObj => setTasks([...tasksObj.tasks]))
+        //     .catch(error => console.error(error));
         fetch('/db/tasks_table')
             .then(res => res.json())
-            .then(obj => console.log(obj))
+            .then(obj => setTasks([...obj.results]))
             .catch(error => console.error(error));
     }, []);
 
