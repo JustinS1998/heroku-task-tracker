@@ -20,6 +20,29 @@ app.get('/api/tasks', (req, res) => {
     console.log(`Sent tasks`);
 });
 
+// DATABASE
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+app.get('/db', async (req, res) => {
+    try {
+      const client = await pool.connect();
+      const result = await client.query('SELECT * FROM test_table');
+      const results = { 'results': (result) ? result.rows : null};
+      res.render('pages/db', results );
+      client.release();
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+  })
+// DATABASE END
+
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
@@ -30,26 +53,3 @@ const port = process.env.PORT || 5000;
 app.listen(port);
 
 console.log(`Listening on ${port}`);
-
-// Database stuff
-const { Pool } = require('pg');
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
-
-app.get('/db', async (req, res) => {
-    try {
-        const client = await pool.connect();
-        const result = await client.query('SELECT * FROM test_table');
-        const results = { 'results': (result) ? result.rows : null };
-        res.render('pages/db', results);
-        client.release();
-    } catch (err) {
-        console.error(err);
-        res.send("Error " + err);
-    }
-})
-// End database stuff
