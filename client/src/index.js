@@ -10,7 +10,7 @@ function App (props) {
             .then(res => res.json())
             .then(tasksObj => setTasks([...tasksObj.tasks]))
             .catch(error => console.error(error));
-        fetch('/db')
+        fetch('/db/tasks_table')
             .then(res => res.json())
             .then(obj => console.log(obj))
             .catch(error => console.error(error));

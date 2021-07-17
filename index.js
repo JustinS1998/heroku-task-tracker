@@ -29,12 +29,11 @@ const pool = new Pool({
     }
 });
 
-app.get('/db', async (req, res) => {
+app.get('/db/tasks_table', async (req, res) => {
     try {
         const client = await pool.connect();
-        const result = await client.query('SELECT * FROM test_table');
+        const result = await client.query('SELECT * FROM tasks_table');
         const results = { 'results': (result) ? result.rows : null };
-        //   res.render('pages/db', results );
         res.json(results);
         client.release();
     } catch (err) {
