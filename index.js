@@ -36,12 +36,33 @@ app.get('/api/tasks_table', (req, res) => {
 
 // DATABASE
 const { Pool } = require('pg');
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
+// const pool = new Pool({
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: {
+//         rejectUnauthorized: false
+//     }
+// });
+const dotenv = require('dotenv');
+dotenv.config();
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; // Remove when deploying
+let pool = null;
+// if on heroku
+if (process.env.DATABASE_URL) {
+    pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: true,
+    });
+} else {
+// if on local
+    pool = new Pool({
+        user: process.env.D_user,
+        password: process.env.D_password,
+        port: process.env.D_pport,
+        host: process.env.D_host,
+        database: process.env.D_database,
+        ssl: true
+    });
+}
 // SELECT * FROM tasks_table;
 app.get('/db/tasks_table', async (req, res) => {
     try {
