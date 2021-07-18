@@ -51,7 +51,9 @@ if (process.env.DATABASE_URL) {
     pool = new Pool({
         connectionString: process.env.DATABASE_URL,
         // ssl: true,
-        ssl:false
+        ssl: {
+            rejectUnauthorized: false
+        }
     });
 } else {
     // if on local
