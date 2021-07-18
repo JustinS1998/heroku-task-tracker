@@ -44,6 +44,7 @@ const { Pool } = require('pg');
 // });
 const dotenv = require('dotenv');
 dotenv.config();
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 let pool = null;
 // if on heroku
 if (process.env.DATABASE_URL) {
@@ -53,7 +54,6 @@ if (process.env.DATABASE_URL) {
     });
 } else {
     // if on local
-    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
     pool = new Pool({
         user: process.env.D_user,
         password: process.env.D_password,
