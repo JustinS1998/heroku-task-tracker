@@ -10,33 +10,37 @@ import { TaskInsert } from './TaskInsert';
 function App (props) {
     const [tasks, setTasks] = useState([]);
 
-    useEffect(() => {
-        fetch('/api/tasks_table') // DEMO table
-        // fetch('/db/tasks_table') // Deploy table
+    const updateTasks = () => {
+        // fetch('/api/tasks_table') // DEMO table
+        fetch('/db/tasks_table') // Deploy table
             .then(res => res.json())
             .then(obj => setTasks([...obj.results]))
             .catch(error => console.error(error));
+    }
+
+    useEffect(() => {
+        updateTasks();
     }, []);
 
     const axios = require('axios').default;
     const insertNewTask = (task) => {
         // console.log(`Title: ${task.title} Details: ${task.details}`);
         axios.post("db/tasks_table", {title:task.title, details:task.details})
-            .then(res => console.log(res))
+            .then(res => {
+                console.log(res);
+                updateTasks();
+            })
             .catch(error => console.error(error));
     };
 
     const deleteTask = (id) => {
         //console.log(`Deleting task id: ${id}`);
         axios.delete("/db/tasks_table", {data:{"id":id}})
-            .then(res => console.log(res))
+            .then(res => {
+                console.log(res);
+                updateTasks();
+            })
             .catch(error => console.error(error));
-            // axios.delete("/message", {data:{"message":e.target.textContent}})
-            // .then((response) => {
-            //     console.log(response);
-            //     updateMessages();
-            // })
-            // .catch((error) => console.error(error));
     }
 
     return (
