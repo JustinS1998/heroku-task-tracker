@@ -42,7 +42,7 @@ const pool = new Pool({
         rejectUnauthorized: false
     }
 });
-
+// SELECT * FROM tasks_table;
 app.get('/db/tasks_table', async (req, res) => {
     try {
         const client = await pool.connect();
@@ -54,6 +54,24 @@ app.get('/db/tasks_table', async (req, res) => {
         console.error(err);
         res.send("Error " + err);
     }
+})
+// DELETE FROM tasks_table WHERE id=0;
+app.delete("/db/tasks_table", async (req, res) => {
+    console.log(req.body);
+    try {
+        const client = await pool.connect();
+        const result = await client.query(`DELETE FROM tasks_table WHERE id=${req.body.data.id}`);
+        const results = { 'results': (result) ? result.rows : null };
+        res.json(results);
+        client.release();
+    } catch (err) {
+        console.error(err);
+        res.send("Error " + err);
+    }
+});
+// INSERT INTO tasks_table (title, details) VALUES ('', '');
+app.post('/db/tasks_table', (req, res) => {
+    console.log(req.body);
 })
 // DATABASE END
 
@@ -67,23 +85,3 @@ const port = process.env.PORT || 5000;
 app.listen(port);
 
 console.log(`Listening on ${port}`);
-
-// DELETE FROM tasks_table WHERE id=0;
-app.delete("/db/tasks_table", (req, res) => {
-    console.log(req.body);
-    try {
-        const client = await pool.connect();
-        const result = await client.query(`DELETE FROM tasks_table WHERE id=${req.body.data.id}`);
-        const results = { 'results': (result) ? result.rows : null };
-        res.json(results);
-        client.release();
-    } catch (err) {
-        console.error(err);
-        res.send("Error " + err);
-    }
-});
-
-// INSERT INTO tasks_table (title, details) VALUES ('', '');
-app.post('/db/tasks_table', (req, res) => {
-    console.log(req.body);
-})
