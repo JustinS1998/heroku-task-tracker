@@ -44,7 +44,6 @@ const { Pool } = require('pg');
 // });
 const dotenv = require('dotenv');
 dotenv.config();
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; // Remove when deploying
 let pool = null;
 // if on heroku
 if (process.env.DATABASE_URL) {
@@ -53,7 +52,8 @@ if (process.env.DATABASE_URL) {
         ssl: true,
     });
 } else {
-// if on local
+    // if on local
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
     pool = new Pool({
         user: process.env.D_user,
         password: process.env.D_password,
@@ -81,7 +81,7 @@ app.delete("/db/tasks_table", async (req, res) => {
     console.log(req.body);
     try {
         const client = await pool.connect();
-        const result = await client.query(`DELETE FROM tasks_table WHERE id=${req.body.data.id}`);
+        const result = await client.query(`DELETE FROM tasks_table WHERE id=${req.body.id}`);
         const results = { 'results': (result) ? result.rows : null };
         res.json(results);
         client.release();
@@ -91,8 +91,18 @@ app.delete("/db/tasks_table", async (req, res) => {
     }
 });
 // INSERT INTO tasks_table (title, details) VALUES ('', '');
-app.post('/db/tasks_table', (req, res) => {
+app.post('/db/tasks_table', async (req, res) => {
     console.log(req.body);
+    try {
+        const client = await pool.connect();
+        const result = await client.query(`INSERT INTO tasks_table (title, details) VALUES ('${req.body.title}', '${req.body.details}')`);
+        const results = { 'results': (result) ? result.rows : null };
+        res.json(results);
+        client.release();
+    } catch (err) {
+        console.error(err);
+        res.send("Error " + err);
+    }
 })
 // DATABASE END
 
