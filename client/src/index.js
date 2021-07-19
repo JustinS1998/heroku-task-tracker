@@ -41,14 +41,29 @@ function App (props) {
                 updateTasks();
             })
             .catch(error => console.error(error));
-    }
+    };
+
+    const updateTask = (id, title, details) => {
+        axios.put("/db/tasks_table", {"id": id, "title":title, "details":details})
+            .then(res => {
+                console.log(res);
+                updateTasks();
+            })
+            .catch(error => console.error(error));
+    };
 
     return (
         <>
             <h1>Task Tracker</h1>
             <TaskInsert insertNewTask={insertNewTask} />
             {tasks.map((element) => {
-                return <TaskItem key={element.id} id={element.id} title={element.title} details={element.details} deleteTask={deleteTask} />
+                return <TaskItem 
+                            key={element.id} 
+                            id={element.id} 
+                            title={element.title} 
+                            details={element.details} 
+                            deleteTask={deleteTask}
+                            updateTask={updateTask} />
             })}
             {/* <li>
                 {tasks.map((element) => {

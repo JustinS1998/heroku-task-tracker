@@ -102,7 +102,14 @@ app.post('/db/tasks_table', async (req, res) => {
     const myQuery = `INSERT INTO tasks_table (title, details) VALUES ('${req.body.title}', '${req.body.details}')`;
     executeQuery(req, res, myQuery)
         .catch(error=>console.error(error));
-})
+});
+// UPDATE tasks_table SET title = '', details = '' WHERE id = 0;
+app.put('/db/tasks_table', async (req, res) => {
+    console.log(req.body);
+    const myQuery = `UPDATE tasks_table SET title = '${req.body.title}', details = '${req.body.details}' WHERE id = ${req.body.id}`;
+    executeQuery(req, res, myQuery)
+        .catch(error=>console.error(error));
+});
 // DATABASE END
 
 // The "catchall" handler: for any request that doesn't
