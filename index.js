@@ -18,50 +18,31 @@ const path = require('path');
 
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
+//used to parse json (instead of body parser)
+app.use(express.urlencoded({ extended: true })); 
 app.use(express.json());
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-// Put all API endpoints under '/api'
-app.get('/api/tasks_table', (req, res) => {
-    // Return them as json
-    res.json(
-        {
-            results: [
-                { 'id': '1', 'title': 'task1', 'details': 'task1 details' },
-                { 'id': '2', 'title': 'task2', 'details': 'task2 details' }
-            ]
-        });
-
-    console.log(`Sent tasks`);
-});
-
-// DATABASE
-const { Pool } = require('pg');
-// const pool = new Pool({
-//     connectionString: process.env.DATABASE_URL,
-//     ssl: {
-//         rejectUnauthorized: false
-//     }
-// });
+// For env variables on local
 const dotenv = require('dotenv');
 dotenv.config();
-// process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+
+// Connect to database
+const { Pool } = require('pg');
 let pool = null;
 // if on heroku
 if (process.env.DATABASE_URL) {
     pool = new Pool({
         connectionString: process.env.DATABASE_URL,
-        // ssl: true,
         ssl: {
             rejectUnauthorized: false
         }
     });
 } else {
     // if on local
-    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'; //only safe to do on local
     pool = new Pool({
         user: process.env.D_user,
         password: process.env.D_password,
@@ -110,7 +91,6 @@ app.put('/db/tasks_table', async (req, res) => {
     executeQuery(req, res, myQuery)
         .catch(error=>console.error(error));
 });
-// DATABASE END
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.

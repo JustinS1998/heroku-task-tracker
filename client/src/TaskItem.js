@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 
 export function TaskItem(props) {
-    
-
     const handleClickDelete = () => {
         props.deleteTask(props.id);
     }
